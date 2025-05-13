@@ -262,6 +262,7 @@ def main(args):
     parser.add_argument("-D", "--debug", action="store_true", help="set logging level to logging.DEBUG")
     parser.add_argument("-N", "--no-archive", action="store_false", help="extract data from all *.o / *.obj files in the directory")
     parser.add_argument("-W", "--windows", action="store_true", help="signals that the binary was compiled for Windows")
+    parser.add_argument("-I", "--ida", required=False, help="path to ida executable")
 
     # parse the args
     args = parser.parse_args(args)
@@ -271,6 +272,7 @@ def main(args):
     is_windows      = args.windows
     using_archives  = args.no_archive
     couples         = args.couples
+    ida_path        = args.ida
 
     bin_dirs      = []
     archive_paths = []
@@ -288,7 +290,7 @@ def main(args):
     prompter.info("Starting the Script")
 
     # requesting the path to the chosen disassembler
-    setDisassemblerPath(prompter)
+    setDisassemblerPath(prompter, ida_path)
     disas_cmd = identifyDisassemblerHandler(getDisasPath(), prompter)
     if disas_cmd is None:
         return

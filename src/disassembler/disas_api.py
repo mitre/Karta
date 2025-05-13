@@ -132,6 +132,17 @@ class DisasAPI(object):
         """
         raise NotImplementedError("Subclasses should implement this!")
 
+    def segmentPermissions(self, index):
+        """Return a collection / generator of permissions (str: R,W,X) on the given segment.
+
+        Args:
+            index (int): segment index (in the range [0, numSegments() - 1])
+
+        Return Value:
+            collection of permission strings ("R", "W", and/or "X")
+        """
+        raise NotImplementedError("Subclasses should implement this!")
+
     def inputFile(self):
         """Return the (full) path of the input file that was used to create the database.
 

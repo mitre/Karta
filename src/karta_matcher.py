@@ -132,7 +132,7 @@ def matchLibraries():
             # identify it's version
             lib_versions = lib_instance.identifyVersions(logger)
             # check if we need to identify this one
-            if lib_versions[0] == lib_instance.VERSION_UNKNOWN:
+            if not lib_versions or (lib_versions and lib_versions[0] == lib_instance.VERSION_UNKNOWN):
                 if len(manual_versions) != 1:
                     logger.warning(f"Can't match an unknown version of library \"{lib_name}\"")
                     continue

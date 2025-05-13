@@ -29,7 +29,7 @@ class IdaCMD(DisasCMD):
         return "IDA"
 
     # Overridden base function
-    def createDatabase(self, binary_file, is_windows):
+    def createDatabase(self, binary_file, is_windows, skip_present=True):
         """Create a database file for the given binary file, compiled to windows or linux as specified.
 
         Args:
@@ -39,11 +39,14 @@ class IdaCMD(DisasCMD):
         Return Value:
             path to the created database file
         """
-        type = "elf" if not is_windows else "coff"
-        suffix = ".i64" if self._path.endswith("64") else ".idb"
+        suffix = ".i64" #if self._path.endswith("64") else ".idb"
         database_file = binary_file + suffix
+        if skip_present and os.path.exists(database_file):
+            return database_file
         # execute the program
-        os.system(f"{self._path} -A -B -T{type} -o{database_file} {binary_file}")
+        wait_status = os.system(f"{self._path} -A -B -o{database_file} {binary_file}")
+        exit_code = os.waitstatus_to_exitcode(wait_status)
+        #print(f"INFO: {self._path} exit code: {exit_code}")
         # return back the (should be) created database file path
         return database_file
 

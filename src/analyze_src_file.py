@@ -17,7 +17,9 @@ def analyzeFile():
     # build the list of exported (non-static) functions
     exported = disas.exports()
     for segment_idx in range(disas.numSegments()):
-        if ".text" not in disas.segmentName(segment_idx):
+        # Some executables use "_text" and some use ".text", so just look for "text"
+        # in section name. Also look for other sections marked executable.
+        if "text" not in disas.segmentName(segment_idx) and "X" not in disas.segmentPermissions(segment_idx):
             continue
         for function_ea in disas.segmentFunctions(segment_idx):
             src_ctx = disas.analyzeFunction(function_ea, True)

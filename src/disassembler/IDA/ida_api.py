@@ -5,6 +5,7 @@ import idc
 import ida_pro
 import ida_search
 import ida_nalt
+import ida_segment
 # Dependencies with heavy setup
 import sark
 from .ida_analysis_api      import AnalyzerIDA
@@ -365,6 +366,28 @@ class IDA(DisasAPI):
         return [x.ea for x in sark.Segment(index=idx).functions]
 
     # Overridden base function
+    def segmentPermissions(self, index):
+        """Return a collection / generator of permissions (str: R,W,X) on the given segment.
+
+        Args:
+            index (int): segment index (in the range [0, numSegments() - 1])
+
+        Return Value:
+            collection of permission strings ("R", "W", and/or "X")
+        """
+        s = ida_segment.getnseg(index)
+        if s is None:
+            raise ValueError(f"Invalid segment index: {index}")
+        perms = list()
+        if s.perm & ida_segment.SEGPERM_READ > 0:
+            perms.append("R")
+        if s.perm & ida_segment.SEGPERM_WRITE > 0:
+            perms.append("W")
+        if s.perm & ida_segment.SEGPERM_EXEC > 0:
+            perms.append("X")
+        return perms
+
+    # Overridden base function
     def inputFile(self):
         """Return the (full) path of the input file that was used to create the database.
 
@@ -405,7 +428,10 @@ class IDA(DisasAPI):
         str_type = idc.get_str_type(ea)
         if str_type is None:
             return None
-        return idc.get_strlit_contents(ea, -1, str_type).decode("utf-8")
+        c = idc.get_strlit_contents(ea, -1, str_type)
+        if c:
+          return c.decode("utf-8")
+        return None
 
     # Overridden base function
     def nameAt(self, ea):
@@ -549,7 +575,7 @@ class IDA(DisasAPI):
         """
         search_pos = range_start
         while search_pos < range_end:
-            match_ea, garbage = ida_search.find_imm(search_pos, idc.SEARCH_DOWN, value)
+            match_ea, garbage = ida_search.find_imm(search_pos, ida_search.SEARCH_DOWN, value)
             search_pos = match_ea + 1
             # Filter out mismatches
             if match_ea == idc.BADADDR:
