@@ -57,11 +57,7 @@ After identifying the used open sources, one can compile a .JSON configuration f
 * https://research.checkpoint.com/thumbs-up-using-machine-learning-to-improve-idas-analysis
 
 ### Credits
-This project was developed by me (see contact details below) with help and support from my research group at Check Point (Check Point Research).
+This project was originally developed by Eyal Itkin ([@EyalItkin](https://twitter.com/EyalItkin)) with help and support from research group at Check Point (Check Point Research).
 
 ### Contact (Updated)
-This repository was developed and maintained by me, Eyal Itkin, during my years at Check Point Research. Sadly, with my departure of the research group, I will no longer be able to maintain this repository. This is mainly because of the long list of requirements for running all of the regression tests, and the IDA Pro versions that are involved in the process.
-
-Please accept my sincere apology.
-
-[@EyalItkin](https://twitter.com/EyalItkin)
+This repository was forked May 2025 by MalwareFrank and updated to work with IDA Pro v9.
